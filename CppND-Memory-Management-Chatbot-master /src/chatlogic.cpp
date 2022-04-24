@@ -23,6 +23,9 @@ ChatLogic::ChatLogic()
     // add pointer to chatlogic so that chatbot answers can be passed on to the GUI
     _chatBot->SetChatLogicHandle(this);
 
+    _nodes =  std::unique_ptr<std::vector<GraphNode *>>(new std::vector<GraphNode()>);
+    _edges = std::unique_ptr<std::vector<GraphEdge *>>(new std::vector<GraphEdge()>);
+
     ////
     //// EOF STUDENT CODE
 }
