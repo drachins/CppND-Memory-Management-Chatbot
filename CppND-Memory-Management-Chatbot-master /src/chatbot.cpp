@@ -23,7 +23,7 @@ ChatBot::ChatBot(std::string filename)
     std::cout << "ChatBot Constructor" << std::endl;
     
     // invalidate data handles
-    _chatLogic = nullptr;
+    /*_chatLogic = nullptr*/;
     _rootNode = nullptr;
 
     // load image into heap memory
