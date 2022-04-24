@@ -23,7 +23,7 @@ ChatBot::ChatBot(std::string filename)
     std::cout << "ChatBot Constructor" << std::endl;
     
     // invalidate data handles
-    /*_chatLogic = nullptr*/;
+    _chatLogic = nullptr;
     _rootNode = nullptr;
 
     // load image into heap memory
@@ -44,6 +44,57 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+ChatBot::ChatBot(const ChatBot &source)
+{
+    std::cout << "Calling ChatBot copy c'tor" << std::endl;
+    _image = new wxBitmap(*source._image);
+    _rootNode = source._rootNode;
+    _currentNode = source._currentNode;
+    _chatLogic->SetChatbotHandle(this);
+
+}
+
+ChatBot& ChatBot::operator=(const ChatBot &source)
+{
+    std::cout << "Calling ChatBot assignment operator" << std::endl;
+    _image = new wxBitmap(*source._image);
+    _rootNode = source._rootNode;
+    _currentNode = source._currentNode;
+    _chatLogic->SetChatbotHandle(this);
+
+    return *this;
+}
+
+ChatBot::ChatBot(ChatBot &&source)
+{
+    std::cout << "Calling ChatBot moving (c'tor)" << std::endl;
+    _image = source._image;
+    _rootNode = source._rootNode;
+    _currentNode = source._currentNode;
+    _chatLogic->SetChatbotHandle(this);
+
+    source._image = nullptr;
+    source._rootNode = nullptr;
+    source._currentNode = nullptr;
+    source._chatLogic = nullptr;
+
+}
+
+ChatBot& ChatBot::operator=(ChatBot &&source)
+{
+    std::cout << "Calling ChatBot moving (assignment) operator" << std::endl;
+    _image = source._image;
+    _rootNode = source._rootNode;
+    _currentNode = source._currentNode;
+    _chatLogic->SetChatbotHandle(this);
+
+    source._image = nullptr;
+    source._rootNode = nullptr;
+    source._currentNode = nullptr;
+    source._chatLogic = nullptr;
+
+    return *this;
+}
 
 ////
 //// EOF STUDENT CODE
