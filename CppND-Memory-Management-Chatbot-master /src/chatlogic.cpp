@@ -5,6 +5,8 @@
 #include <iterator>
 #include <tuple>
 #include <algorithm>
+#include <memory>
+
 
 #include "graphedge.h"
 #include "graphnode.h"
@@ -131,7 +133,7 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                         ////
 
                         // check if node with this ID exists already
-                        auto newNode = std::find_if(_nodes.begin(), _nodes.end(), [&id](GraphNode *node) { return node->GetID() == id; });
+                        auto newNode = std::find_if(_nodes.begin(), _nodes.end(), [&id](const std::unique_ptr<GraphNode> &node) { return node->GetID() == id; });
 
                         // create new element if ID does not yet exist
                         if (newNode == _nodes.end())
@@ -161,21 +163,21 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                         if (parentToken != tokens.end() && childToken != tokens.end())
                         {
                             // get iterator on incoming and outgoing node via ID search
-                            auto parentNode = std::find_if(_nodes.begin(), _nodes.end(), [&parentToken](GraphNode *node) { return node->GetID() == std::stoi(parentToken->second); });
-                            auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](GraphNode *node) { return node->GetID() == std::stoi(childToken->second); });
+                            auto parentNode = std::find_if(_nodes.begin(), _nodes.end(), [&parentToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(parentToken->second); });
+                            auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(childToken->second); });
 
                             // create new edge
-                            _edges.emplace_back(std::make_unique<GraphEdge>(id));
-                            _edges.back()->SetChildNode(*childNode);
-                            _edges.back()->SetParentNode(*parentNode);
-                            ////_edges.push_back(std::move(edge));
+                            ////_edges.emplace_back(std::make_unique<GraphEdge>(id));
+                            std::unique_ptr<GraphEdge> edge = std::make_unique<GraphEdge>(id);
+                            edge->SetChildNode((*childNode).get());
+                            edge->SetParentNode((*parentNode).get());
 
                             // find all keywords for current node
-                            AddAllTokensToElement("KEYWORD", tokens, _edges.back());
+                            AddAllTokensToElement("KEYWORD", tokens, *edge.get());
 
                             // store reference in child node and parent node
-                            (*childNode)->AddEdgeToParentNode(_edges.back());
-                            (*parentNode)->AddEdgeToChildNode(_edges.back());
+                            ((*childNode).get())->AddEdgeToParentNode(edge.get());
+                            ((*parentNode).get())->AddEdgeToChildNode(edge.get());
                         }
 
                         ////
@@ -202,7 +204,7 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
     ////
 
     // identify root node
-    GraphNode *rootNode = nullptr;
+    std::unique_ptr<GraphNode> rootNode = nullptr;
     for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
     {
         // search for nodes which have no incoming edges
@@ -211,7 +213,7 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
 
             if (rootNode == nullptr)
             {
-                rootNode = *it; // assign current node to root
+                rootNode = std::move(*it); // assign current node to root
             }
             else
             {
@@ -221,7 +223,7 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
     }
 
     // add chatbot to graph root node
-    _chatBot->SetRootNode(rootNode);
+    _chatBot->SetRootNode(rootNode.get());
     rootNode->MoveChatbotHere(_chatBot);
     
     ////
