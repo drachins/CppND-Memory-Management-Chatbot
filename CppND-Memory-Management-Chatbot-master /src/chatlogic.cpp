@@ -25,9 +25,6 @@ ChatLogic::ChatLogic()
     // add pointer to chatlogic so that chatbot answers can be passed on to the GUI
     _chatBot->SetChatLogicHandle(this);
 
-    /*_nodes =  std::unique_ptr<std::vector<GraphNode *>>(new std::vector<GraphNode()>);
-    _edges = std::unique_ptr<std::vector<GraphEdge *>>(new std::vector<GraphEdge()>);*/
-
     ////
     //// EOF STUDENT CODE
 }
@@ -40,18 +37,6 @@ ChatLogic::~ChatLogic()
     // delete chatbot instance
     std::cout << "Calling ~ChatLogic()" << std::endl;
     delete _chatBot;
-
-    // delete all nodes
-    /*for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
-    {
-        delete *it;
-    }
-
-    // delete all edges
-    for (auto it = std::begin(_edges); it != std::end(_edges); ++it)
-    {
-        delete *it;
-    }*/
 
     ////
     //// EOF STUDENT CODE
@@ -167,7 +152,6 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                             auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(childToken->second); });
 
                             // create new edge
-                            ////_edges.emplace_back(std::make_unique<GraphEdge>(id));
                             std::unique_ptr<GraphEdge> edge = std::make_unique<GraphEdge>(id);
                             edge->SetChildNode((*childNode).get());
                             edge->SetParentNode((*parentNode).get());
@@ -177,7 +161,7 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
 
                             // store reference in child node and parent node
                             ((*childNode).get())->AddEdgeToParentNode(edge.get());
-                            ((*parentNode).get())->AddEdgeToChildNode(edge.get());
+                            ((*parentNode).get())->AddEdgeToChildNode(std::move(edge));
                         }
 
                         ////
