@@ -12,7 +12,7 @@ GraphNode::~GraphNode()
     //// STUDENT CODE
     ////
     ////std::cout << "Calling ~GraphNode()" << std::endl;
-    /*delete _chatBot*/; 
+    
 
     ////
     //// EOF STUDENT CODE
