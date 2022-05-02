@@ -12,6 +12,7 @@
 ChatBot::ChatBot()
 {
     // invalidate data handles
+    std::cout << "ChatBot Constructor WITHOUT memory allocation" << std::endl;
     _image = nullptr;
     _chatLogic = nullptr;
     _rootNode = nullptr;
@@ -50,6 +51,7 @@ ChatBot::ChatBot(const ChatBot &source)
     _image = new wxBitmap(*source._image);
     _rootNode = source._rootNode;
     _currentNode = source._currentNode;
+    _chatLogic = source._chatLogic;
     _chatLogic->SetChatbotHandle(this);
 
 }
@@ -60,6 +62,7 @@ ChatBot& ChatBot::operator=(const ChatBot &source)
     _image = new wxBitmap(*source._image);
     _rootNode = source._rootNode;
     _currentNode = source._currentNode;
+    _chatLogic = source._chatLogic;
     _chatLogic->SetChatbotHandle(this);
 
     return *this;
@@ -71,6 +74,7 @@ ChatBot::ChatBot(ChatBot &&source)
     _image = source._image;
     _rootNode = source._rootNode;
     _currentNode = source._currentNode;
+    _chatLogic = source._chatLogic;
     _chatLogic->SetChatbotHandle(this);
 
     source._image = nullptr;
@@ -86,6 +90,7 @@ ChatBot& ChatBot::operator=(ChatBot &&source)
     _image = source._image;
     _rootNode = source._rootNode;
     _currentNode = source._currentNode;
+    _chatLogic = source._chatLogic;
     _chatLogic->SetChatbotHandle(this);
 
     source._image = nullptr;
