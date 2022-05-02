@@ -19,9 +19,6 @@ ChatLogic::ChatLogic()
     //// STUDENT CODE
     ////
 
-
-
-
     ////
     //// EOF STUDENT CODE
 }
@@ -30,11 +27,8 @@ ChatLogic::~ChatLogic()
 {
     //// STUDENT CODE
     ////
-
     // delete chatbot instance
     std::cout << "Calling ~ChatLogic()" << std::endl;
-    delete _chatBot;
-
     ////
     //// EOF STUDENT CODE
 }
