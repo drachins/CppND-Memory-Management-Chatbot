@@ -5,6 +5,7 @@
 GraphNode::GraphNode(int id)
 {
     _id = id;
+
 }
 
 GraphNode::~GraphNode()
@@ -37,7 +38,6 @@ void GraphNode::MoveChatbotHere(ChatBot chatbot)
 void GraphNode::MoveChatbotToNewNode(GraphNode *newNode)
 {
     newNode->MoveChatbotHere(_chatBot);
-    //_chatBot = nullptr; // invalidate pointer at source
 }
 ////
 //// EOF STUDENT CODE
